@@ -1,5 +1,6 @@
 package br.com.zup.mercadolivre.usuario;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -16,14 +17,19 @@ public class Usuario {
     @Email
     @Column(unique = true, nullable = false)
     private String email;
+
     @NotBlank
     @Size(min = 6)
     @Column(nullable = false)
     private String senha;
+
     @PastOrPresent
-    @NotNull
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime dataCriacao;
+
+    @Deprecated
+    public Usuario(){}
 
     public Usuario(@NotEmpty @Email String email,
                    @NotNull @Valid SenhaLimpa senhaLimpa) {
@@ -32,6 +38,5 @@ public class Usuario {
 
         this.email = email;
         this.senha = senhaLimpa.hash();
-        this.dataCriacao = LocalDateTime.now();
     }
 }

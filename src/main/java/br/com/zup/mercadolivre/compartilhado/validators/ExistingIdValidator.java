@@ -2,14 +2,14 @@ package br.com.zup.mercadolivre.compartilhado.validators;
 
 import org.springframework.util.Assert;
 
+import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class UniqueValueValidator implements ConstraintValidator<UniqueValue, Object> {
+public class ExistingIdValidator implements ConstraintValidator<ExistingId, Object> {
     private String domainAttribute;
     private Class<?> aClass;
 
@@ -17,25 +17,25 @@ public class UniqueValueValidator implements ConstraintValidator<UniqueValue, Ob
     private EntityManager manager;
 
     @Override
-    public void initialize(UniqueValue constraintAnnotation) {
-        this.domainAttribute = constraintAnnotation.fieldName();
-        this.aClass = constraintAnnotation.domainClass();
+    public void initialize(ExistingId constraintAnnotation) {
+        domainAttribute = constraintAnnotation.fieldName();
+        aClass = constraintAnnotation.domainClass();
     }
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
-        if(o == null) {
+        if(o == null){
             return true;
         }
 
-        Query query = manager.createQuery("SELECT 1 FROM " + aClass.getName() + " WHERE " + domainAttribute + " = " +
+        Query query = manager.createQuery("select 1 from " + aClass.getName() + " o where " + domainAttribute + " = " +
                                                   ":value");
         query.setParameter("value", o);
-        List<?> resultado = query.getResultList();
 
-        Assert.state(resultado.size() <= 1, "Foram encontrados dois ou mais registros com um valor que deveria ser " +
-                "único.");
+        List<?> list = query.getResultList();
 
-        return resultado.isEmpty();
+        Assert.state(list.size() <= 1, "Foi encontrado mais de um registro com o mesmo identificador.");
+
+        return !list.isEmpty();
     }
 }
