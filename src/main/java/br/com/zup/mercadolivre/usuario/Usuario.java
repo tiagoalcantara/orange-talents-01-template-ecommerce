@@ -25,9 +25,6 @@ public class Usuario {
     @Column(nullable = false)
     private LocalDateTime dataCriacao;
 
-    @Deprecated
-    public Usuario(){}
-
     public Usuario(@NotEmpty @Email String email,
                    @NotNull @Valid SenhaLimpa senhaLimpa) {
         Assert.hasLength(email, "O e-mail não pode ser vazio.");
