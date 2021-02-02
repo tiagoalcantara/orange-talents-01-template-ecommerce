@@ -1,6 +1,6 @@
 package br.com.zup.mercadolivre.usuario;
 
-import br.com.zup.mercadolivre.config.validators.UniqueValue;
+import br.com.zup.mercadolivre.compartilhado.validators.UniqueValue;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.*;
@@ -22,12 +22,6 @@ public class CadastrarUsuarioRequest {
     }
 
     public Usuario toEntity() {
-        String senhaCriptografada = criptografarSenha(senha);
-        return new Usuario(email, senhaCriptografada);
-    }
-
-    private String criptografarSenha(String senha) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.encode(senha);
+        return new Usuario(email, new SenhaLimpa(senha));
     }
 }

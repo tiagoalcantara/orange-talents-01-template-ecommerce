@@ -1,4 +1,4 @@
-package br.com.zup.mercadolivre.config.validators;
+package br.com.zup.mercadolivre.compartilhado.validators;
 
 import org.springframework.util.Assert;
 
@@ -29,8 +29,8 @@ public class UniqueValueValidator implements ConstraintValidator<UniqueValue, Ob
         query.setParameter("value", o);
         List<?> resultado = query.getResultList();
 
-        Assert.state(resultado.size() <= 1, "Foram encontrados dois ou mais registros com um valor que deve ser único" +
-                ".");
+        Assert.state(resultado.size() <= 1, "Foram encontrados dois ou mais registros com um valor que deveria ser " +
+                "único.");
 
         return resultado.isEmpty();
     }

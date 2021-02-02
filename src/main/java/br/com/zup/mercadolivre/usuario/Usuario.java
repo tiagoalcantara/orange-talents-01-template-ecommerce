@@ -1,6 +1,9 @@
 package br.com.zup.mercadolivre.usuario;
 
+import org.springframework.util.Assert;
+
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -22,10 +25,16 @@ public class Usuario {
     @Column(nullable = false)
     private LocalDateTime dataCriacao;
 
+    @Deprecated
+    public Usuario(){}
+
     public Usuario(@NotEmpty @Email String email,
-                   @NotBlank @Size(min = 6) String senha) {
+                   @NotNull @Valid SenhaLimpa senhaLimpa) {
+        Assert.hasLength(email, "O e-mail não pode ser vazio.");
+        Assert.notNull(senhaLimpa, "A senha limpa não pode ser nula");
+
         this.email = email;
-        this.senha = senha;
+        this.senha = senhaLimpa.hash();
         this.dataCriacao = LocalDateTime.now();
     }
 }

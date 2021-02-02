@@ -1,4 +1,4 @@
-package br.com.zup.mercadolivre.config.validators;
+package br.com.zup.mercadolivre.compartilhado.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

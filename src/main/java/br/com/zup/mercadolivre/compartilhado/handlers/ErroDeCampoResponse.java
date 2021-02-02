@@ -1,4 +1,4 @@
-package br.com.zup.mercadolivre.config.handlers;
+package br.com.zup.mercadolivre.compartilhado.handlers;
 
 public class ErroDeCampoResponse {
     private String campo;

@@ -1,4 +1,4 @@
-package br.com.zup.mercadolivre.config.handlers;
+package br.com.zup.mercadolivre.compartilhado.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
