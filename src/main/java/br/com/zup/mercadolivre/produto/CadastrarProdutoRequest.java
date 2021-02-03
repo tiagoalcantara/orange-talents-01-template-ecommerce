@@ -12,6 +12,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class CadastrarProdutoRequest {
@@ -57,5 +58,18 @@ public class CadastrarProdutoRequest {
 
         return new Produto(this.nome, this.valor, this.quantidade, this.caracteristicas, this.descricao, categoria,
                            usuario);
+    }
+
+    public HashSet<String> checarNomesIguais() {
+        HashSet<String> nomesIguais = new HashSet<>();
+        HashSet<String> nomes = new HashSet<>();
+
+        this.caracteristicas.forEach(caracteristica -> {
+            if (!nomes.add(caracteristica.getNome())) {
+                nomesIguais.add(caracteristica.getNome());
+            }
+        });
+
+        return nomesIguais;
     }
 }

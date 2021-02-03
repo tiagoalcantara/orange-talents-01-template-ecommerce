@@ -3,6 +3,7 @@ package br.com.zup.mercadolivre.produto;
 import br.com.zup.mercadolivre.categoria.Categoria;
 import br.com.zup.mercadolivre.usuario.Usuario;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -32,6 +33,9 @@ public class Produto {
     private Integer quantidade;
     @Size(min = 3)
     @ElementCollection
+    @CollectionTable(uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"produto_id", "nome"})
+    })
     private List<CaracteristicaProduto> caracteristicas;
     @NotBlank
     @Size(max = 1000)
@@ -55,6 +59,7 @@ public class Produto {
                    @NotBlank @Size(max = 1000) String descricao,
                    @NotNull @Valid Categoria categoria,
                    @NotNull @Valid Usuario dono) {
+
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
@@ -62,5 +67,13 @@ public class Produto {
         this.descricao = descricao;
         this.categoria = categoria;
         this.dono = dono;
+
+        Assert.state(this.caracteristicas.size() >= 3, "Deve ter pelo menos 3 características.");
+        Assert.hasLength(this.nome, "O nome é obrigatório.");
+        Assert.hasLength(this.descricao, "A descrição é obrigatória.");
+        Assert.isTrue(this.quantidade > 0, "A quantidade deve ser positiva.");
+        Assert.isTrue(this.valor.compareTo(BigDecimal.ZERO) > 0, "A quantidade deve ser positiva.");
+        Assert.notNull(dono, "Deve ter um dono.");
+        Assert.notNull(categoria, "Deve ter uma categoria.");
     }
 }
