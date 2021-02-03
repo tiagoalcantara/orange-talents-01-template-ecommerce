@@ -17,7 +17,6 @@ public class AutenticacaoService implements UserDetailsService {
     @PersistenceContext
     private EntityManager manager;
 
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         TypedQuery<Usuario> query = manager.createQuery("SELECT u FROM Usuario u WHERE u.email = :email",

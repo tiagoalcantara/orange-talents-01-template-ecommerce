@@ -1,4 +1,4 @@
-package br.com.zup.mercadolivre.config.autenticacao;
+package br.com.zup.mercadolivre.config.seguranca;
 
 import br.com.zup.mercadolivre.auth.AutenticacaoService;
 import br.com.zup.mercadolivre.auth.AutenticacaoViaTokenFilter;

@@ -1,7 +1,5 @@
 package br.com.zup.mercadolivre.auth;
 
-import br.com.zup.mercadolivre.auth.AutenticacaoService;
-import br.com.zup.mercadolivre.config.autenticacao.TokenService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,6 +45,6 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
     private Optional<String> recuperarToken(HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authorization");
 
-        return Optional.ofNullable(token);
+        return Optional.ofNullable(token.split(" ")[1]);
     }
 }
