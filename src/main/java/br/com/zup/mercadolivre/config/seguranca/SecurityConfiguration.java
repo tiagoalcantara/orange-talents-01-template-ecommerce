@@ -1,11 +1,14 @@
 package br.com.zup.mercadolivre.config.autenticacao;
 
-import br.com.zup.mercadolivre.config.autenticacao.AutenticacaoService;
+import br.com.zup.mercadolivre.auth.AutenticacaoService;
+import br.com.zup.mercadolivre.auth.AutenticacaoViaTokenFilter;
+import br.com.zup.mercadolivre.auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -14,9 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 @EnableWebSecurity
 @Configuration
@@ -28,11 +28,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenService tokenService;
 
-    @PersistenceContext
-    private EntityManager manager;
+
 
     @Override
-    @Bean
+    @Bean(BeanIds.AUTHENTICATION_MANAGER)
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
@@ -48,9 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, "/usuario").permitAll()
             .antMatchers(HttpMethod.POST, "/auth").permitAll()
             .anyRequest().authenticated()
+            .and().cors()
             .and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, manager),
+            .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, autenticacaoService),
                                    UsernamePasswordAuthenticationFilter.class);
     }
 

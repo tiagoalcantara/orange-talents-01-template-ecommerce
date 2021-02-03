@@ -1,5 +1,6 @@
-package br.com.zup.mercadolivre.config.autenticacao;
+package br.com.zup.mercadolivre.auth;
 
+import br.com.zup.mercadolivre.auth.UsuarioLogado;
 import br.com.zup.mercadolivre.usuario.Usuario;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,6 +29,6 @@ public class AutenticacaoService implements UserDetailsService {
             throw new UsernameNotFoundException("Email/senha incorretos.");
         }
 
-        return usuario;
+        return new UsuarioLogado(usuario);
     }
 }
