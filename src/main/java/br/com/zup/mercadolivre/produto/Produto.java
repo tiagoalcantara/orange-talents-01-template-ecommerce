@@ -68,7 +68,7 @@ public class Produto {
         this.categoria = categoria;
         this.dono = dono;
 
-        Assert.state(this.caracteristicas.size() >= 3, "Deve ter pelo menos 3 características.");
+        Assert.isTrue(this.caracteristicas.size() >= 3, "Deve ter pelo menos 3 características.");
         Assert.hasLength(this.nome, "O nome é obrigatório.");
         Assert.hasLength(this.descricao, "A descrição é obrigatória.");
         Assert.isTrue(this.quantidade > 0, "A quantidade deve ser positiva.");

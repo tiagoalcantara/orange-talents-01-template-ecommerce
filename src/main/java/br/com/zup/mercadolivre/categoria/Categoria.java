@@ -4,6 +4,7 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -30,5 +31,9 @@ public class Categoria {
 
         this.nome = nome;
         this.categoriaMae = categoriaMae;
+    }
+
+    public Categoria(@NotNull String nome) {
+        this(nome, null);
     }
 }
