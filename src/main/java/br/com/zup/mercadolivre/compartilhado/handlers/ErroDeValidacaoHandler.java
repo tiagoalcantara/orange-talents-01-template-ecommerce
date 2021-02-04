@@ -19,7 +19,6 @@ public class ErroDeValidacaoHandler {
     @Autowired
     private MessageSource messageSource;
 
-
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErroDeValidacaoResponse handle(MethodArgumentNotValidException exception) {
