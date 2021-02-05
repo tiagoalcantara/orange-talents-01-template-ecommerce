@@ -31,10 +31,10 @@ public class PerguntaController {
 
     @PostMapping("/produto/{id}/pergunta")
     @Transactional
-    public ResponseEntity<List<ListarPerguntasResponse>> cadastrar(@RequestBody @Valid CadastrarPerguntaRequest request,
-                                       @AuthenticationPrincipal UsuarioLogado usuarioLogado,
-                                       @PathVariable("id") Long produtoId,
-                                       UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<List<DetalharPerguntaResponse>> cadastrar(@RequestBody @Valid CadastrarPerguntaRequest request,
+                                                                    @AuthenticationPrincipal UsuarioLogado usuarioLogado,
+                                                                    @PathVariable("id") Long produtoId,
+                                                                    UriComponentsBuilder uriBuilder) {
         Produto produto = manager.find(Produto.class, produtoId);
 
         if (produto == null) {
@@ -60,6 +60,6 @@ public class PerguntaController {
 
         List<Pergunta> perguntas = query.getResultList();
 
-        return ResponseEntity.ok(ListarPerguntasResponse.converter(perguntas));
+        return ResponseEntity.ok(DetalharPerguntaResponse.converter(perguntas));
     }
 }

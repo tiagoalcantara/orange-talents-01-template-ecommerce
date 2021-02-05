@@ -1,8 +1,11 @@
 package br.com.zup.mercadolivre.produto;
 
 import br.com.zup.mercadolivre.categoria.Categoria;
+import br.com.zup.mercadolivre.opiniao.Opiniao;
+import br.com.zup.mercadolivre.pergunta.Pergunta;
 import br.com.zup.mercadolivre.usuario.Usuario;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -15,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalDouble;
 
 @Entity
 public class Produto {
@@ -55,6 +59,12 @@ public class Produto {
     @Valid
     @ManyToOne
     private Usuario dono;
+
+    @OneToMany(mappedBy = "produto")
+    List<Opiniao> opinioes;
+
+    @OneToMany(mappedBy = "produto")
+    List<Pergunta> perguntas;
 
     @Deprecated
     public Produto(){}
@@ -99,5 +109,39 @@ public class Produto {
 
     public String getNome() {
         return nome;
+    }
+
+    public List<String> getImagens() {
+        return imagens;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public List<CaracteristicaProduto> getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public List<Pergunta> getPerguntas() {
+        return perguntas;
+    }
+
+    public List<Opiniao> getOpinioes() {
+        return opinioes;
+    }
+
+    public Double getMediaDeAvaliacoes(){
+        OptionalDouble media = opinioes.stream().mapToDouble(opiniao -> opiniao.getNota().doubleValue()).average();
+
+        return media.orElse(0);
+    }
+
+    public Integer getTotalDeAvaliacoes() {
+        return opinioes.size();
     }
 }

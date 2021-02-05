@@ -33,6 +33,9 @@ public class Opiniao {
     @ManyToOne
     private Usuario autor;
 
+    @Deprecated
+    public Opiniao(){}
+
     public Opiniao(@NotNull @Min(1) @Max(5) Integer nota,
                    @NotBlank String titulo,
                    @NotBlank String descricao,
@@ -47,5 +50,25 @@ public class Opiniao {
 
     public Produto getProduto() {
         return this.produto;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Usuario getAutor() {
+        return autor;
+    }
+
+    public Integer getNota() {
+        return nota;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,7 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,5 +78,16 @@ public class ProdutoController {
         produto.adicionarImagens(urls);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detalhar(@PathVariable("id") Long idProduto) {
+        Produto produto = manager.find(Produto.class, idProduto);;
+
+        if (produto == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O produto informado não existe.");
+        }
+
+        return ResponseEntity.ok(new DetalharProdutoResponse(produto));
     }
 }
