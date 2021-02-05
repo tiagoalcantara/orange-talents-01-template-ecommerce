@@ -31,6 +31,9 @@ public class Pergunta {
     @ManyToOne
     private Produto produto;
 
+    @Deprecated
+    public Pergunta() {}
+
     public Pergunta(@NotBlank String titulo,
                     @NotNull Usuario autor,
                     @NotNull Produto produto) {
@@ -41,5 +44,13 @@ public class Pergunta {
 
     public Produto getProduto() {
         return this.produto;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

@@ -1,8 +1,8 @@
 package br.com.zup.mercadolivre.pergunta;
 
 import br.com.zup.mercadolivre.auth.UsuarioLogado;
-import br.com.zup.mercadolivre.opiniao.Opiniao;
 import br.com.zup.mercadolivre.produto.Produto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class PerguntaController {
@@ -23,11 +26,15 @@ public class PerguntaController {
     @PersistenceContext
     private EntityManager manager;
 
+    @Autowired
+    private PerguntaEmailService perguntaEmailService;
+
     @PostMapping("/produto/{id}/pergunta")
     @Transactional
-    public ResponseEntity<?> cadastrar(@RequestBody @Valid CadastrarPerguntaRequest request,
+    public ResponseEntity<List<ListarPerguntasResponse>> cadastrar(@RequestBody @Valid CadastrarPerguntaRequest request,
                                        @AuthenticationPrincipal UsuarioLogado usuarioLogado,
-                                       @PathVariable("id") Long produtoId) {
+                                       @PathVariable("id") Long produtoId,
+                                       UriComponentsBuilder uriBuilder) {
         Produto produto = manager.find(Produto.class, produtoId);
 
         if (produto == null) {
@@ -44,6 +51,15 @@ public class PerguntaController {
 
         manager.persist(pergunta);
 
-        return ResponseEntity.ok().build();
+        String uriProduto = uriBuilder.path("/produto/{id}").buildAndExpand(pergunta.getProduto().getId()).toUriString();
+        perguntaEmailService.enviarPergunta(pergunta, uriProduto);
+
+        TypedQuery<Pergunta> query = manager.createQuery("SELECT p FROM Pergunta p WHERE p.produto = :produto",
+                                                         Pergunta.class);
+        query.setParameter("produto", produto);
+
+        List<Pergunta> perguntas = query.getResultList();
+
+        return ResponseEntity.ok(ListarPerguntasResponse.converter(perguntas));
     }
 }

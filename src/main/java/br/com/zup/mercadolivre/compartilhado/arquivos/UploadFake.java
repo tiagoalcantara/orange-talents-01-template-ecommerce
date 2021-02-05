@@ -1,10 +1,10 @@
 package br.com.zup.mercadolivre.compartilhado.arquivos;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Service
+@Component
 public class UploadFake implements IUploadDeImagens{
     @Override
     public String salvar(byte[] imagem, String nomeDoArquivo) {

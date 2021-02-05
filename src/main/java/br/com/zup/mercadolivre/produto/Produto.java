@@ -92,4 +92,12 @@ public class Produto {
     public void adicionarImagens(List<String> imagens){
         this.imagens.addAll(imagens);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
 }
