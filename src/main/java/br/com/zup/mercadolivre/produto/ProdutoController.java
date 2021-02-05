@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +47,7 @@ public class ProdutoController {
                              .build();
     }
 
-    @PostMapping("/adicionar-imagens/{id}")
+    @PostMapping("/{id}/adicionar-imagens")
     @Transactional
     public ResponseEntity<?> adicionarImagens(@Valid AdicionarImagensRequest request,
                                               @AuthenticationPrincipal UsuarioLogado usuarioLogado,
@@ -57,8 +59,7 @@ public class ProdutoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O produto informado não existe.");
         }
 
-        if (!usuarioLogado.get()
-                          .equals(produto.getDono())) {
+        if (!usuarioLogado.get().isDonoDoProduto(produto)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem autorização para esse produto.");
         }
 

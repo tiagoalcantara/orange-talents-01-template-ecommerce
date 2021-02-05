@@ -1,5 +1,6 @@
 package br.com.zup.mercadolivre.usuario;
 
+import br.com.zup.mercadolivre.produto.Produto;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,6 +60,10 @@ public class Usuario {
 
     public List<Perfil> getPerfis() {
         return perfis;
+    }
+
+    public boolean isDonoDoProduto(Produto produto) {
+        return this.equals(produto.getDono());
     }
 
     @Override
