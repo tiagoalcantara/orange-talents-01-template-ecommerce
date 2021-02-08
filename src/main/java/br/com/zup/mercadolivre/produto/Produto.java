@@ -5,15 +5,11 @@ import br.com.zup.mercadolivre.opiniao.Opiniao;
 import br.com.zup.mercadolivre.pergunta.Pergunta;
 import br.com.zup.mercadolivre.usuario.Usuario;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,7 +29,7 @@ public class Produto {
     @Column(nullable = false)
     private BigDecimal valor;
     @NotNull
-    @Positive
+    @PositiveOrZero
     @Column(nullable = false)
     private Integer quantidade;
     @Size(min = 3)
@@ -71,7 +67,7 @@ public class Produto {
 
     public Produto(@NotBlank String nome,
                    @NotNull @Positive BigDecimal valor,
-                   @NotNull @Positive Integer quantidade,
+                   @NotNull @PositiveOrZero Integer quantidade,
                    @Size(min = 3) @Valid List<CaracteristicaProduto> caracteristicas,
                    @NotBlank @Size(max = 1000) String descricao,
                    @NotNull @Valid Categoria categoria,
@@ -143,5 +139,13 @@ public class Produto {
 
     public Integer getTotalDeAvaliacoes() {
         return opinioes.size();
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void abateEstoque(Integer quantidade) {
+        this.quantidade = this.quantidade - quantidade;
     }
 }
